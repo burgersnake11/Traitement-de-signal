@@ -1,6 +1,5 @@
-from tcxreader.tcxreader import TCXReader, TCXTrackPoint
-import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import butter, lfilter, freqz
 from scipy import interpolate
 
 
@@ -10,20 +9,31 @@ def add_missing_value(a, y):
     i = len(x)
     j=0
     while True:
-        try:
+            """         try: """
+            if(y[j]=="NaN"):
+                if j == 0:
+                    add = y[j+1]
+                    y[j]=add
+                elif y[j-1] == "NaN":
+                    add = (y[j-2]+y[j+1])/2
+                    y[j] =add
+                elif y[j+1] == "NaN":
+                    add = (y[j-1]+y[j+2])/2
+                    y[j]= add
+                else:
+                    add = (y[j-1]+y[j+1])/2
+                    y[j]=add
+            elif j == len(x)-1:
+                return x, y
             if x[j+1]-x[j]>1:
                 x.insert((j+1), (x[j]+1))
                 add = (y[j]+y[j+1])/2
                 y.insert((j+1),add)
                 i = i + 1
-            elif(y[j]=="NaN"):
-                add = (y[j]+y[j+1])/2
-                y[j]=((j+1),add)
-        except:
-            pass
-        if (j==i):
-            return x, y
-        j+=1
+            """         except:pass """
+            if (j==i):
+                return x, y
+            j+=1
 
 def splinning(data_to_spline):
     n = len(data_to_spline)
