@@ -1,12 +1,12 @@
 from tcxreader.tcxreader import TCXReader, TCXTrackPoint
 import matplotlib.pyplot as plt
 import numpy as np
-from main import add_missing_value, splinning, filter, replace_NaN, filter_big_mistake, calcul_acceleration
+from main import add_missing_value, splinning, filter, replace_NaN, filter_high_peak, calcul_acceleration, filter_low_peak
 import os
 
 tcx_reader = TCXReader()
 dir = "files"
-fig, grph = plt.subplots(4)
+fig, grph = plt.subplots(5)
 
 for path in os.listdir(dir):
     path="files/"+path
@@ -21,6 +21,9 @@ for path in os.listdir(dir):
     heures=0
     minutes=0
     secondes=0
+    time_test=str(data.trackpoints[0]).split()[1].split(":")
+    time_min=int(time_test[0])*60*60+int(time_test[1])*60+int(time_test[2])
+
     for i in data.trackpoints :
         a=str(i).split()
         try:
@@ -50,25 +53,31 @@ for path in os.listdir(dir):
         heures=int(b[0])*60*60
         minutes=int(b[1])*60
         secondes=int(b[2])
-        time.append(heures+minutes+secondes)
+        time.append(int((heures+minutes+secondes)-time_min))
+        """         
         try:
             acceleration.append((vitesse[np.size(vitesse)-1]-vitesse[np.size(vitesse)-2])/float(time[np.size(time)-1]-time[np.size(time)-2]))
         except: 
-            acceleration.append(0)
+            acceleration.append(0) 
+        """
     time = tuple(time)
     vitesse = replace_NaN(vitesse)
-    """    
-    vitesse = filter_big_mistake(vitesse)
+       
+    vitesse = filter_high_peak(vitesse)
+    vitesse = filter_low_peak(vitesse)
     vitesse = filter(vitesse) 
-    """
 
     time_vitesse, vitesse = add_missing_value(time, vitesse)
+
+    acceleration=calcul_acceleration(vitesse)
     time_acceleration, acceleration = add_missing_value(time, acceleration)
+
     time_elevation, elevation = add_missing_value(time, elevation)
     time_distance, distance = add_missing_value(time, distance) 
     time_elevation, elevation = splinning(elevation)
     time_distance, distance = splinning(distance)
-    time_vitesse, vitesse = splinning(vitesse) 
+    time_vitesse, vitesse = splinning(vitesse)
+    time_acceleration, acceleration =splinning(acceleration) 
     
     grph[0].plot(time_elevation,elevation)
     grph[0].set_title("Élévation en fonction du temps")
@@ -78,9 +87,9 @@ for path in os.listdir(dir):
     grph[2].set_title("Distance en fonction du temps")
     grph[3].plot(time_vitesse,vitesse)
     grph[3].set_title("Vitesse en fonction du temps")
-    """ 
+     
     grph[4].plot(time_acceleration, acceleration)
     grph[4].set_title("Accélération en fonction du temps") 
-    """
+    
 
 plt.show()

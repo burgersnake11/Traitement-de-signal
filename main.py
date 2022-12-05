@@ -2,25 +2,19 @@ import numpy as np
 from scipy.signal import butter, lfilter, freqz
 from scipy import interpolate
 
-
-
 def add_missing_value(a, y):
     x=list(a)
     i = len(x)
     j=0
     while True:
-            """         try: """
-            
-            if j == len(x)-1:
+            if (j==i-1):
                 return x, y
             if x[j+1]-x[j]>1:
                 x.insert((j+1), (x[j]+1))
                 add = (y[j]+y[j+1])/2
                 y.insert((j+1),add)
                 i = i + 1
-            """         except:pass """
-            if (j==i):
-                return x, y
+
             j+=1
 
 def splinning(data_to_spline):
@@ -63,14 +57,29 @@ def replace_NaN(data_to_clean):
             data_cleaned.append(data_to_clean[i])
     return data_cleaned
  
-def filter_big_mistake(data_to_clean):
+def filter_high_peak(data_to_clean):
     data_cleaned=[]
     max=0
     max=sum(data_to_clean)
     moyenne=max/len(data_to_clean)
     for i in range(len(data_to_clean)):
         if data_to_clean[i] > moyenne*15/10:
-            data_cleaned.append(moyenne)
+            try:
+                data_cleaned.append((data_to_clean[-7]+data_to_clean[-8]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
+            except:
+                data_cleaned.append(moyenne)
+        else:
+            data_cleaned.append(data_to_clean[i])
+    return data_cleaned
+
+def filter_low_peak(data_to_clean):
+    data_cleaned=[]
+    for i in range(len(data_to_clean)):
+        if data_to_clean[i] < 1:
+            try:
+                data_cleaned.append((data_to_clean[-7]+data_to_clean[-8]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
+            except:
+                data_cleaned.append(2)
         else:
             data_cleaned.append(data_to_clean[i])
     return data_cleaned
@@ -78,7 +87,10 @@ def filter_big_mistake(data_to_clean):
 def calcul_acceleration(speed):
     acceleration=[]
     for i in range(len(speed)):
-
-        if i != 0 and i != len(speed)-1 : 
-            acceleration.append(speed[i]+speed[i+1])
+        if i == 0:
+            acceleration.append(speed[i])
+        elif i == len(speed)-1:
+            acceleration.append(-speed[i])
+        else: 
+            acceleration.append(speed[i]-speed[i+1])
     return acceleration
