@@ -59,13 +59,12 @@ def replace_NaN(data_to_clean):
  
 def filter_high_peak(data_to_clean):
     data_cleaned=[]
-    max=0
     max=sum(data_to_clean)
     moyenne=max/len(data_to_clean)
     for i in range(len(data_to_clean)):
         if data_to_clean[i] > moyenne*15/10:
             try:
-                data_cleaned.append((data_to_clean[-7]+data_to_clean[-8]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
+                data_cleaned.append((data_to_clean[-8]+data_to_clean[-7]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
             except:
                 data_cleaned.append(moyenne)
         else:
@@ -77,9 +76,21 @@ def filter_low_peak(data_to_clean):
     for i in range(len(data_to_clean)):
         if data_to_clean[i] < 1:
             try:
-                data_cleaned.append((data_to_clean[-7]+data_to_clean[-8]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
+                data_cleaned.append((data_to_clean[-8]+data_to_clean[-7]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
             except:
                 data_cleaned.append(2)
+        else:
+            data_cleaned.append(data_to_clean[i])
+    return data_cleaned
+
+def filter_low_peak_acceleration(data_to_clean):
+    data_cleaned=[]
+    for i in range(len(data_to_clean)):
+        if data_to_clean[i] < (-2/10):
+            try:
+                data_cleaned.append((data_to_clean[-8]+data_to_clean[-7]+data_to_clean[i-6]+data_to_clean[i-5]+data_to_clean[i-4]+data_to_clean[i-3]+data_to_clean[i-2]+data_to_clean[i-1]+data_to_clean[i]+data_to_clean[i+1]+data_to_clean[i+2]+data_to_clean[i+3]+data_to_clean[i+4]+data_to_clean[i+5]+data_to_clean[i+6]+data_to_clean[+7]+data_to_clean[+8])/17)
+            except:
+                data_cleaned.append(0)
         else:
             data_cleaned.append(data_to_clean[i])
     return data_cleaned

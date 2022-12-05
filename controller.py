@@ -1,7 +1,7 @@
 from tcxreader.tcxreader import TCXReader, TCXTrackPoint
 import matplotlib.pyplot as plt
 import numpy as np
-from main import add_missing_value, splinning, filter, replace_NaN, filter_high_peak, calcul_acceleration, filter_low_peak
+from main import add_missing_value, splinning, filter, replace_NaN, filter_high_peak, calcul_acceleration, filter_low_peak, filter_low_peak_acceleration
 import os
 
 tcx_reader = TCXReader()
@@ -66,10 +66,14 @@ for path in os.listdir(dir):
     vitesse = filter_high_peak(vitesse)
     vitesse = filter_low_peak(vitesse)
     vitesse = filter(vitesse) 
+ 
 
     time_vitesse, vitesse = add_missing_value(time, vitesse)
 
     acceleration=calcul_acceleration(vitesse)
+    acceleration = filter_high_peak(acceleration)
+    acceleration = filter_low_peak_acceleration(acceleration)
+
     time_acceleration, acceleration = add_missing_value(time, acceleration)
 
     time_elevation, elevation = add_missing_value(time, elevation)
