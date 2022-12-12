@@ -84,6 +84,7 @@ for path in os.listdir(dir):
     time_acceleration, acceleration =splinning(acceleration) 
     
     grph[0].plot(time_elevation,elevation)
+    grph[0].set_ylim(50,175)
     grph[0].set_title("Élévation en fonction du temps")
     grph[1].plot(latitude,longitude)
     grph[1].set_title("Carte")
@@ -91,7 +92,6 @@ for path in os.listdir(dir):
     grph[2].set_title("Distance en fonction du temps")
     grph[3].plot(time_vitesse,vitesse)
     grph[3].set_title("Vitesse en fonction du temps")
-     
     grph[4].plot(time_acceleration, acceleration)
     grph[4].set_title("Accélération en fonction du temps") 
     
